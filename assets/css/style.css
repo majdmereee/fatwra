@@ -1,0 +1,130 @@
+/* --- المتغيرات والتنسيق الأساسي --- */
+:root {
+    --primary: #2563eb;
+    --primary-hover: #1d4ed8;
+    --bg: #f3f4f6;
+    --panel-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #6b7280;
+    --border: #e5e7eb;
+    --danger: #ef4444;
+    --paper-width: 80mm;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Tajwal', sans-serif; }
+body { background: var(--bg); color: var(--text-main); height: 100vh; overflow: hidden; }
+
+/* --- تخطيط التطبيق الرئيسي --- */
+.app-container {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+}
+
+/* --- لوحة التحكم والأزرار --- */
+.control-panel {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow-y: auto;
+}
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 10px;
+}
+.items-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 15px;
+}
+.item-btn {
+    background: var(--panel-bg);
+    border: 2px solid var(--border);
+    padding: 20px 10px;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+}
+.item-btn:hover { border-color: var(--primary); transform: translateY(-3px); }
+.item-btn:active { transform: translateY(0); }
+
+/* --- الفاتورة --- */
+.invoice-wrapper {
+    width: 400px;
+    background: #e2e8f0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-right: 1px solid #cbd5e1;
+}
+.invoice-paper {
+    width: var(--paper-width); /* مقاس الورق الحراري */
+    min-height: 200px;
+    background: #fff;
+    padding: 15px;
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+    flex-grow: 1;
+    overflow-y: auto;
+}
+.invoice-header { text-align: center; margin-bottom: 15px; border-bottom: 1px dashed #000; padding-bottom: 10px; }
+.invoice-header h2 { font-size: 1.2rem; font-weight: 800; }
+.time-meta { font-size: 0.8rem; margin-top: 5px; display: flex; flex-direction: column; gap: 3px; }
+.hidden { display: none !important; }
+
+.invoice-table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
+.invoice-table th { border-bottom: 1px solid #000; text-align: right; padding: 5px 0; font-size: 0.9rem; }
+.invoice-table td { padding: 8px 0; border-bottom: 1px dotted #ccc; vertical-align: middle; }
+.amount-input { width: 70px; padding: 5px; border: 1px solid #ccc; font-family: 'Tajwal'; font-weight: 700; text-align: center; }
+
+.invoice-footer { border-top: 2px dashed #000; padding-top: 10px; font-weight: 800; font-size: 1.2rem; display: flex; justify-content: space-between; }
+
+/* أزرار الإجراءات */
+.btn-primary, .btn-danger, .btn-icon {
+    width: 100%; padding: 15px; border: none; border-radius: 8px; color: #fff;
+    font-weight: 700; cursor: pointer; font-size: 1.1rem; margin-bottom: 10px; transition: 0.2s;
+}
+.btn-primary { background: var(--primary); }
+.btn-danger { background: var(--danger); }
+.btn-icon { width: auto; background: var(--text-main); font-size: 0.9rem; padding: 10px 15px;}
+.btn-remove { background: #fee2e2; color: #dc2626; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px; font-weight: bold; }
+
+/* --- الإعدادات المنبثقة --- */
+.settings-panel {
+    position: absolute; top: 0; right: -450px; width: 400px; height: 100%;
+    background: #fff; box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+    transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 100;
+    display: flex; flex-direction: column;
+}
+.settings-panel.open { right: 0; }
+.settings-header { padding: 20px; background: var(--text-main); color: #fff; display: flex; justify-content: space-between;}
+.settings-content { padding: 20px; overflow-y: auto; flex-grow: 1; }
+.setting-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid var(--border); }
+
+/* --- إعدادات الطباعة الدقيقة (80mm) --- */
+@media print {
+    body { background: #fff; }
+    .no-print, .control-panel, #btn-print, #btn-new, .app-container { display: none !important; }
+    
+    @page { size: 80mm auto; margin: 0; }
+    
+    body * { visibility: hidden; }
+    .invoice-wrapper, .invoice-wrapper * { visibility: visible; }
+    .invoice-wrapper {
+        position: absolute; left: 0; top: 0; width: 80mm; padding: 0; border: none; background: transparent;
+    }
+    .invoice-paper { box-shadow: none; width: 100%; margin: 0; padding: 5mm; }
+    
+    /* تحويل حقول الإدخال إلى نصوص ثابتة عند الطباعة */
+    .amount-input { border: none; outline: none; background: transparent; width: auto; text-align: left; padding: 0; }
+}
